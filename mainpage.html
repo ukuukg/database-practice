@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記事本</title>
+</head>
+<body>
+    <div>
+        <table id="content">
+            <tr>
+                <td style="color:blue">
+                    內容
+                </td>
+                <td>
+                    備註
+                </td>
+            </tr>
+        </table>
+        <br>
+        <button id="create">新增項目</button>
+    </div>
+
+    <script>
+        //window.location.href='/9';
+        document.getElementById('create').onclick=e=>{
+            let content = prompt('新增項目  內容：');
+            if(content===null){
+                return;
+            }
+            let note = prompt('新增項目  備註：');
+            if(note===null){
+                return;
+            }
+
+            fetch(`/create/${content}/${note}`).then(res=>{
+                return res.json();
+            }).then(res=>{
+                if(res==='success'){
+                    return 4;
+                }
+
+                if(res==='fail'){
+                    alert('新增失敗');
+                }else{
+                    alert('bug');
+                }
+                return 3;
+            }).then(res=>{
+                window.location.href='/';
+            });
+        }
+
+        fetch('/select_all').then(result=>{
+            return result.json();
+        }).then(result=>{
+            let addedHtml="";
+            for(let i=0;i<result.length;i++){
+                addedHtml=addedHtml+`<tr><td id="${result[i]['id']}_content">${result[i]['內容']}</td><td id="${result[i]['id']}_note" style="color:blue">${result[i]['備註']}</td><td><button id="${result[i]['id']}_update">修改</button></td><td><button id="${result[i]['id']}_delete">刪除</button></td></tr>`
+            }
+            document.getElementById('content').innerHTML=document.getElementById('content').innerHTML+addedHtml;
+
+            
+            for(let i=0;i<result.length;i++){
+                 // `id="${result[i]['id']}_content" id="${result[i]['id']}_note"  id="${result[i]['id']}_update" id="${result[i]['id']}_delete"`
+                document.getElementById(`${result[i]['id']}_update`).onclick=e=>{
+                    let content,note;
+                    content = prompt(`修改項目 原內容:[${document.getElementById(`${result[i]['id']}_content`).innerHTML}]  新內容：`);
+                    if(content === null){
+                        return;
+                    }
+                    note = prompt(`修改項目 原備註:[${document.getElementById(`${result[i]['id']}_note`).innerHTML}]  新備註：`);
+                    if(note===null){
+                        return;
+                    }
+
+                    fetch(`/update/${result[i]['id']}/${content}/${note}`).then(res=>{
+                        return res.json();
+                    }).then(res=>{
+                        if(res==='success'){
+                            return 4;
+                        }
+
+                        if(res==='fail'){
+                            alert('修改失敗');
+                        }else{
+                            alert('bug');
+                        }
+                        return 3;
+                    }).then(res=>{
+                        window.location.href='/';
+                    });
+                }
+                document.getElementById(`${result[i]['id']}_delete`).onclick=e=>{
+                    fetch(`/delete/${result[i]['id']}`).then(res=>{
+                        return res.json();
+                    }).then(res=>{
+                        if(res==='success'){
+                            return 4;
+                        }
+
+                        if(res==='fail'){
+                            alert('刪除失敗');
+                        }else{
+                            alert('bug');
+                        }
+                        return 3;
+                    }).then(res=>{
+                        window.location.href='/';
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

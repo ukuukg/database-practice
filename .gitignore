@@ -1,0 +1,5 @@
+.env
+practice/
+node_modules/
+*.bat
+note/
