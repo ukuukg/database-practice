@@ -110,9 +110,13 @@ async function fail(res) {
 
 
 async function main() {
-    let result;
-    result = await connect_database();
-    //console.log(result);
+    try { 
+        await connect_database(); 
+        console.log("Database connected"); 
+    } catch (err) { 
+        console.error(" Database connection failed:", err.message); 
+        process.exit(1); 
+    }
 
     const server = http.createServer((req, res) => {
         let method = req.method; // GET, POST, , ... 
