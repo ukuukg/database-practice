@@ -73,7 +73,7 @@ async function update(res,id,content,note) {
         [content,note,id]
     );
     res.writeHead(200, { 'Content-Type': 'text/json' });
-    if(result.length===0){
+    if(result.rows.length===0){
         res.end(JSON.stringify('fail'));
     }else{
         res.end(JSON.stringify('success'));
@@ -88,7 +88,7 @@ async function del(res,id) {
         [id]
     );
     res.writeHead(200, { 'Content-Type': 'text/json' });
-    if(result.length===0){
+    if(result.rows.length===0){
         res.end(JSON.stringify('fail'));
     }else{
         res.end(JSON.stringify('success'));
