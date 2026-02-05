@@ -9,7 +9,8 @@ const { Client } = require('pg');
 dotenv.config(); 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }  // Supabase 一定要
+  ssl: { rejectUnauthorized: false },  // Supabase 一定要
+  host: new URL(process.env.DATABASE_URL).hostname // 強制指定 host
 });
 let mainpage=fs.readFileSync('mainpage.html');
 
