@@ -7,10 +7,14 @@ const PORT = process.env.PORT || 3000;
 const { Client } = require('pg');
 
 dotenv.config(); 
+const dbUrl = new URL(process.env.DATABASE_URL);
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },  // Supabase 一定要
-  host: new URL(process.env.DATABASE_URL).hostname // 強制指定 host
+  user: dbUrl.username, 
+  password: dbUrl.password, 
+  host: dbUrl.hostname, // 強制指定 host 
+  port: dbUrl.port, 
+  database: dbUrl.pathname.slice(1), 
+  ssl: { rejectUnauthorized: false }
 });
 let mainpage=fs.readFileSync('mainpage.html');
 
