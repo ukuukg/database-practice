@@ -5,6 +5,7 @@ const ip="0.0.0.0";
 const dotenv=require('dotenv');
 const PORT = process.env.PORT || 3000;
 const { Client } = require('pg');
+const Url=require('url');
 
 dotenv.config(); 
 const dbUrl = new URL(process.env.DATABASE_URL);
@@ -120,7 +121,9 @@ async function main() {
 
     const server = http.createServer((req, res) => {
         let method = req.method; // GET, POST, , ... 
-        let url = req.url;
+        let url = Url.parse(req.url,true);
+        let text=url.path;
+        url=text ? decodeURIComponent(text) : '';
         if(method==='GET'){
             if (url === '/') {
                 getMainpage(res);
