@@ -41,7 +41,7 @@ async function disconnect_database(){
 
 async function select_all() {
     let result;
-    result = await client.query('SELECT * FROM 記事本 ');
+    result = await client.query('SELECT * FROM 記事本 ORDER BY id');
     return result.rows;
 }
 

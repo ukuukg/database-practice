@@ -15,16 +15,13 @@ async function main() {
   await client.connect();
 
   result = await client.query(`
-      INSERT INTO student (student_id,name) VALUES ($1,$2);
-    `,[1,'peter']
+      DROP TABLE student         
+    `
   );
-  //console.log(result.rows);
-
+  console.log(result.rows);
 
   await client.end();
 }
 
 main().catch(console.error)
-
-
 
