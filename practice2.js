@@ -15,7 +15,7 @@ async function main() {
   await client.connect();
 
   result = await client.query(`
-      DROP TABLE student         
+      
     `
   );
   console.log(result.rows);
