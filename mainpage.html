@@ -31,7 +31,7 @@
         }
         th, td {
             padding: 12px;
-            text-align: left;
+            text-align: center;
             border-bottom: 1px solid #ddd;
         }
         th {
@@ -128,18 +128,18 @@
         }).then(result => {
             let addedHtml = "";
             for (let i = 0; i < result.length; i++) {
-                addedHtml = addedHtml + `<tr><td id="${result[i]['id']}_content">${result[i]['內容']}</td><td id="${result[i]['id']}_note" style="color:blue">${result[i]['備註']}</td><td><button class="btn btn-update" id="${result[i]['id']}_update">修改</button> <button class="btn btn-delete" id="${result[i]['id']}_delete">刪除</button></td></tr>`
+                addedHtml = addedHtml + `<tr><td id="${result[i]['id']}_content">${result[i]['內容']}</td><td id="${result[i]['id']}_note">${result[i]['備註']}</td><td><button class="btn btn-update" id="${result[i]['id']}_update">修改</button> <button class="btn btn-delete" id="${result[i]['id']}_delete">刪除</button></td></tr>`
             }
             document.getElementById('content').innerHTML = document.getElementById('content').innerHTML + addedHtml;
 
             for (let i = 0; i < result.length; i++) {
                 document.getElementById(`${result[i]['id']}_update`).onclick = e => {
                     let content, note;
-                    content = prompt(`修改項目 原內容:[${document.getElementById(`${result[i]['id']}_content`).innerHTML}]  新內容：`);
+                    content = prompt(`修改項目 內容：`,`${document.getElementById(`${result[i]['id']}_content`).innerHTML}`);
                     if (content === null) {
                         return;
                     }
-                    note = prompt(`修改項目 原備註:[${document.getElementById(`${result[i]['id']}_note`).innerHTML}]  新備註：`);
+                    note = prompt(`修改項目 備註：`,`${document.getElementById(`${result[i]['id']}_note`).innerHTML}`);
                     if (note === null) {
                         return;
                     }
