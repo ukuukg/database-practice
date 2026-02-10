@@ -162,6 +162,12 @@
                     });
                 }
                 document.getElementById(`${result[i]['id']}_delete`).onclick = e => {
+                    const content = document.getElementById(`${result[i]['id']}_content`).innerHTML;
+                    const note = document.getElementById(`${result[i]['id']}_note`).innerHTML;
+                    const confirmed = confirm(`確定要刪除這個內容和備註嗎？\n內容：${content}\n備註：${note}`);
+                    if (!confirmed) {
+                        return;
+                    }
                     fetch(`/delete/${result[i]['id']}`).then(res => {
                         return res.json();
                     }).then(res => {
