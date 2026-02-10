@@ -4,109 +4,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>記事本</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn-delete {
+            background-color: #f44336;
+        }
+        .btn-delete:hover {
+            background-color: #da190b;
+        }
+        .btn-update {
+            background-color: #2196F3;
+        }
+        .btn-update:hover {
+            background-color: #1976D2;
+        }
+        .create-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <table id="content">
+    <div class="container">
+        <h1>記事本</h1>
+        <table>
             <tr>
-                <td style="color:blue">
-                    內容
-                </td>
-                <td>
-                    備註
-                </td>
+                <th>內容</th>
+                <th>備註</th>
+                <th>操作</th>
             </tr>
+            <tbody id="content">
+                
+            </tbody>
         </table>
-        <br>
-        <button id="create">新增項目</button>
+        <button class="btn create-btn" id="create">新增項目</button>
     </div>
 
     <script>
-        //window.location.href='/9';
-        document.getElementById('create').onclick=e=>{
+        document.getElementById('create').onclick = e => {
             let content = prompt('新增項目  內容：');
-            if(content===null){
+            if (content === null) {
                 return;
             }
             let note = prompt('新增項目  備註：');
-            if(note===null){
+            if (note === null) {
                 return;
             }
 
-            fetch(`/create/${content}/${note}`).then(res=>{
+            fetch(`/create/${content}/${note}`).then(res => {
                 return res.json();
-            }).then(res=>{
-                if(res==='success'){
+            }).then(res => {
+                if (res === 'success') {
                     return 4;
                 }
 
-                if(res==='fail'){
+                if (res === 'fail') {
                     alert('新增失敗');
-                }else{
+                } else {
                     alert('bug');
                 }
                 return 3;
-            }).then(res=>{
-                window.location.href='/';
+            }).then(res => {
+                window.location.href = '/';
             });
         }
 
-        fetch('/select_all').then(result=>{
+        fetch('/select_all').then(result => {
             return result.json();
-        }).then(result=>{
-            let addedHtml="";
-            for(let i=0;i<result.length;i++){
-                addedHtml=addedHtml+`<tr><td id="${result[i]['id']}_content">${result[i]['內容']}</td><td id="${result[i]['id']}_note" style="color:blue">${result[i]['備註']}</td><td><button id="${result[i]['id']}_update">修改</button></td><td><button id="${result[i]['id']}_delete">刪除</button></td></tr>`
+        }).then(result => {
+            let addedHtml = "";
+            for (let i = 0; i < result.length; i++) {
+                addedHtml = addedHtml + `<tr><td id="${result[i]['id']}_content">${result[i]['內容']}</td><td id="${result[i]['id']}_note" style="color:blue">${result[i]['備註']}</td><td><button class="btn btn-update" id="${result[i]['id']}_update">修改</button> <button class="btn btn-delete" id="${result[i]['id']}_delete">刪除</button></td></tr>`
             }
-            document.getElementById('content').innerHTML=document.getElementById('content').innerHTML+addedHtml;
+            document.getElementById('content').innerHTML = document.getElementById('content').innerHTML + addedHtml;
 
-            
-            for(let i=0;i<result.length;i++){
-                 // `id="${result[i]['id']}_content" id="${result[i]['id']}_note"  id="${result[i]['id']}_update" id="${result[i]['id']}_delete"`
-                document.getElementById(`${result[i]['id']}_update`).onclick=e=>{
-                    let content,note;
+            for (let i = 0; i < result.length; i++) {
+                document.getElementById(`${result[i]['id']}_update`).onclick = e => {
+                    let content, note;
                     content = prompt(`修改項目 原內容:[${document.getElementById(`${result[i]['id']}_content`).innerHTML}]  新內容：`);
-                    if(content === null){
+                    if (content === null) {
                         return;
                     }
                     note = prompt(`修改項目 原備註:[${document.getElementById(`${result[i]['id']}_note`).innerHTML}]  新備註：`);
-                    if(note===null){
+                    if (note === null) {
                         return;
                     }
 
-                    fetch(`/update/${result[i]['id']}/${content}/${note}`).then(res=>{
+                    fetch(`/update/${result[i]['id']}/${content}/${note}`).then(res => {
                         return res.json();
-                    }).then(res=>{
-                        if(res==='success'){
+                    }).then(res => {
+                        if (res === 'success') {
                             return 4;
                         }
 
-                        if(res==='fail'){
+                        if (res === 'fail') {
                             alert('修改失敗');
-                        }else{
+                        } else {
                             alert('bug');
                         }
                         return 3;
-                    }).then(res=>{
-                        window.location.href='/';
+                    }).then(res => {
+                        window.location.href = '/';
                     });
                 }
-                document.getElementById(`${result[i]['id']}_delete`).onclick=e=>{
-                    fetch(`/delete/${result[i]['id']}`).then(res=>{
+                document.getElementById(`${result[i]['id']}_delete`).onclick = e => {
+                    fetch(`/delete/${result[i]['id']}`).then(res => {
                         return res.json();
-                    }).then(res=>{
-                        if(res==='success'){
+                    }).then(res => {
+                        if (res === 'success') {
                             return 4;
                         }
 
-                        if(res==='fail'){
+                        if (res === 'fail') {
                             alert('刪除失敗');
-                        }else{
+                        } else {
                             alert('bug');
                         }
                         return 3;
-                    }).then(res=>{
-                        window.location.href='/';
+                    }).then(res => {
+                        window.location.href = '/';
                     });
                 }
             }
